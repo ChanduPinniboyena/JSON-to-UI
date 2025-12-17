@@ -18,7 +18,8 @@ function App() {
             setLoading(true);
             setError(null);
             const response = await axios.get(`${API_BASE_URL}/clients`);
-
+            console.log("AAa")
+            console.log(response.data);
             if (response.data.success) {
                 setClients(response.data.data);
             } else {

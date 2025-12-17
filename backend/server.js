@@ -5,7 +5,7 @@ require('dotenv').config();
 const apiRoutes = require('./routes/api');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(cors());
@@ -14,7 +14,9 @@ app.use(express.urlencoded({ extended: true }));
 
 // Logging middleware
 app.use((req, res, next) => {
+    // console.log(req);
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    console.log("AA");
     next();
 });
 
@@ -23,13 +25,14 @@ app.use('/api', apiRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
+    console.log(req.path);
     res.json({
         message: 'JSON to UI API Server',
         version: '1.0.0',
         endpoints: {
             health: '/api/health',
             clients: '/api/clients',
-            clientById: '/api/clients/:id'
+            // clientById: '/api/clients/:id'
         }
     });
 });

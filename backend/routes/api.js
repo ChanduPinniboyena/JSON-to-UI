@@ -8,24 +8,24 @@ const pool = require('../config/database');
  * Returns dynamic JSON that can be used to render UI
  */
 router.get('/clients', async (req, res) => {
+    console.log(req.path)
     try {
         const query = `
       SELECT 
         p."PTY_ID" as "id",
         p."PTY_FirstName" as "firstName",
         p."PTY_LastName" as "lastName",
-        p."PTY_Phone" as "phone",
+    
         p."PTY_SSN" as "ssn",
         a."Add_Line1" as "addressLine1",
-        a."Add_Line2" as "addressLine2",
         a."Add_City" as "city",
-        s."Stt_Name" as "state",
+       s."Stt_Name" as "state",
         s."Stt_Code" as "stateCode",
         a."Add_Zip" as "zip"
       FROM "OPT_Party" p
       LEFT JOIN "OPT_Address" a ON p."PTY_ID" = a."Add_PartyID"
       LEFT JOIN "SYS_State" s ON a."Add_State" = s."Stt_ID"
-      ORDER BY p."PTY_FirstName", p."PTY_LastName"
+      ORDER BY p."PTY_ID", p."PTY_FirstName"
     `;
 
         const result = await pool.query(query);
@@ -45,55 +45,7 @@ router.get('/clients', async (req, res) => {
     }
 });
 
-/**
- * GET /api/clients/:id
- * Fetch a single client by ID
- */
-router.get('/clients/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
 
-        const query = `
-      SELECT 
-        p."PTY_ID" as "id",
-        p."PTY_FirstName" as "firstName",
-        p."PTY_LastName" as "lastName",
-        p."PTY_Phone" as "phone",
-        p."PTY_SSN" as "ssn",
-        a."Add_Line1" as "addressLine1",
-        a."Add_Line2" as "addressLine2",
-        a."Add_City" as "city",
-        s."Stt_Name" as "state",
-        s."Stt_Code" as "stateCode",
-        a."Add_Zip" as "zip"
-      FROM "OPT_Party" p
-      LEFT JOIN "OPT_Address" a ON p."PTY_ID" = a."Add_PartyID"
-      LEFT JOIN "SYS_State" s ON a."Add_State" = s."Stt_ID"
-      WHERE p."PTY_ID" = $1
-    `;
-
-        const result = await pool.query(query, [id]);
-
-        if (result.rows.length === 0) {
-            return res.status(404).json({
-                success: false,
-                error: 'Client not found'
-            });
-        }
-
-        res.json({
-            success: true,
-            data: result.rows[0]
-        });
-    } catch (error) {
-        console.error('Error fetching client:', error);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to fetch client',
-            message: error.message
-        });
-    }
-});
 
 /**
  * GET /api/health
