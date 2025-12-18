@@ -1,45 +1,33 @@
 import React, { useMemo, useState } from 'react';
 
 /**
- * DynamicTable Component
- * Automatically renders a table based on the JSON structure
- * If columns are removed from JSON, they won't appear in the table
- * Users can also toggle column visibility from the frontend
+ * Renders a table dynamically based on the keys present in the data.
+ * Purely presentation component - no column manipulation logic.
  */
 function DynamicTable({ data, title, subtitle }) {
-    // Extract column headers dynamically from the first data object
+    // Generate headers from the first data item
     const columns = useMemo(() => {
         if (!data || data.length === 0) return [];
 
-        const firstItem = data[0];
-        return Object.keys(firstItem).map(key => ({
+        return Object.keys(data[0]).map(key => ({
             key: key,
             label: formatColumnLabel(key)
         }));
     }, [data]);
 
-    // Format column labels for display (convert camelCase to Title Case)
+    // Converts 'firstName' -> 'First Name'
     function formatColumnLabel(key) {
-        // Handle special cases
         if (key === 'id') return 'ID';
         if (key === 'ssn') return 'SSN';
 
-        // Convert camelCase to Title Case
         return key
-            .replace(/([A-Z])/g, ' $1') // Add space before capital letters
-            .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
+            .replace(/([A-Z])/g, ' $1')
+            .replace(/^./, str => str.toUpperCase())
             .trim();
     }
 
-    // Format cell value for display
-    function formatCellValue(value, key) {
+    function formatCellValue(value) {
         if (value === null || value === undefined) return '-';
-
-        // Mask SSN partially for security
-        if (key === 'ssn') {
-            return value;
-        }
-
         return value;
     }
 

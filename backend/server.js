@@ -25,7 +25,7 @@ app.use('/api', apiRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
-    console.log(req.path);
+    console.log("';lkjhgAA");
     res.json({
         message: 'JSON to UI API Server',
         version: '1.0.0',

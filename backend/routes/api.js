@@ -2,11 +2,6 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
 
-/**
- * GET /api/clients
- * Fetches all clients with their address and state information
- * Returns dynamic JSON that can be used to render UI
- */
 router.get('/clients', async (req, res) => {
     console.log(req.path)
     try {
@@ -28,6 +23,7 @@ router.get('/clients', async (req, res) => {
       ORDER BY p."PTY_ID", p."PTY_FirstName"
     `;
 
+        console.log("Movingto frontend")
         const result = await pool.query(query);
 
         res.json({
@@ -47,10 +43,7 @@ router.get('/clients', async (req, res) => {
 
 
 
-/**
- * GET /api/health
- * Health check endpoint
- */
+//I used this to check the database connection
 router.get('/health', async (req, res) => {
     try {
         await pool.query('SELECT 1');
